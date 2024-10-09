@@ -1,0 +1,13 @@
+-- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+-- Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+-- --------------------------------------------------------------------------------
+-- Tool Version: Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
+-- Date        : Wed Oct  9 07:46:59 2024
+-- Host        : DESKTOP-5AJS436 running 64-bit major release  (build 9200)
+-- Command     : write_vhdl -mode funcsim -nolib -force -file
+--               D:/Programming/FPGA/case-study-modul9/case-study-modul9.sim/sim_1/synth/func/xsim/cpu_func_synth.vhd
+-- Design      : cpu
+-- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
+--               synthesized. This netlist cannot be used for SDF annotated simulation.
+-- Device      : xc7k70tfbv676-1
+-- --------------------------------------------------------------------------------
