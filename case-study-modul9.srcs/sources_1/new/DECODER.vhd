@@ -34,7 +34,6 @@ entity decoder is
   port (
     cpu_clk         : in    std_logic;
     cpu_enable      : in    std_logic;
-    cpu_reset       : in    std_logic;
     instruction     : in    std_logic_vector(15 downto 0);
     opcode          : out   std_logic_vector(3 downto 0);
     operand1        : out   std_logic_vector(3 downto 0);
@@ -47,12 +46,17 @@ architecture behavioral of decoder is
 
 begin
 
-  decode_instruction : process (instruction) is
+  decode_instruction : process (instruction, cpu_enable) is
   begin
-
-    opcode   <= instruction(15 downto 12);
-    operand1 <= instruction(11 downto 8);
-    operand2 <= instruction(7 downto 4);
-
+    if cpu_enable = '1' then
+      opcode   <= instruction(15 downto 12);
+      operand1 <= instruction(11 downto 8);
+      operand2 <= instruction(7 downto 4);
+    else
+      opcode   <= (others => '0');
+      operand1 <= (others => '0');
+      operand2 <= (others => '0');
+    end if;
   end process decode_instruction;
+
 end architecture behavioral;

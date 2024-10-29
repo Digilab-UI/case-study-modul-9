@@ -34,7 +34,7 @@ entity cpu is
   port (
     cpu_clk     : in std_logic                     := '0';
     cpu_enable  : in std_logic                     := '1';
-    cpu_reset   : in std_logic                     := '1';
+    cpu_reset   : in std_logic                     := '0';
     instruction : in std_logic_vector(15 downto 0) := (others => '0')
   );
 end entity cpu;
@@ -69,7 +69,6 @@ architecture behavioral of cpu is
     port (
       cpu_clk     : in std_logic;
       cpu_enable  : in std_logic;
-      cpu_reset   : in std_logic;
       instruction : in std_logic_vector(15 downto 0);
       opcode      : out std_logic_vector(3 downto 0);
       operand1    : out std_logic_vector(3 downto 0);
@@ -111,7 +110,6 @@ begin
     (
       cpu_clk     => cpu_clk,
       cpu_enable  => cpu_enable,
-      cpu_reset   => cpu_reset,
       instruction => instruction_raw,
       opcode      => opcode,
       operand1    => operand1,
