@@ -18,10 +18,14 @@
   <File Type="BITSTR-MMI" Name="cpu.mmi"/>
   <File Type="ROUTE-METHODOLOGY-DRC" Name="cpu_methodology_drc_routed.rpt"/>
   <File Type="BITSTR-SYSDEF" Name="cpu.sysdef"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="cpu_methodology_drc_routed.pb"/>
   <File Type="BITSTR-LTX" Name="debug_nets.ltx"/>
   <File Type="BITSTR-LTX" Name="cpu.ltx"/>
+  <File Type="BOOT-PDI-FILE" Name="cpu_boot.pdi"/>
   <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
+  <File Type="NPI_FILE" Name="cpu.npi"/>
   <File Type="OPT-DRC" Name="cpu_drc_opted.rpt"/>
+  <File Type="RBD_FILE" Name="cpu.rbd"/>
   <File Type="OPT-HWDEF" Name="cpu.hwdef"/>
   <File Type="PLACE-IO" Name="cpu_io_placed.rpt"/>
   <File Type="PLACE-UTIL" Name="cpu_utilization_placed.rpt"/>
@@ -55,17 +59,13 @@
   <File Type="POSTROUTE-PHYSOPT-TIMING-RPX" Name="cpu_timing_summary_postroute_physopted.rpx"/>
   <File Type="POSTROUTE-PHYSOPT-BUS-SKEW" Name="cpu_bus_skew_postroute_physopted.rpt"/>
   <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-RPX" Name="cpu_bus_skew_postroute_physopted.rpx"/>
-  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="cpu_methodology_drc_routed.pb"/>
   <File Type="ROUTE-DRC-RPX" Name="cpu_drc_routed.rpx"/>
   <File Type="ROUTE-METHODOLOGY-DRC-RPX" Name="cpu_methodology_drc_routed.rpx"/>
   <File Type="PDI-FILE" Name="cpu.pdi"/>
-  <File Type="BOOT-PDI-FILE" Name="cpu_boot.pdi"/>
   <File Type="PL-PDI-FILE" Name="cpu_pld.pdi"/>
   <File Type="RCFI_FILE" Name="cpu.rcfi"/>
   <File Type="CFI_FILE" Name="cpu.cfi"/>
   <File Type="RNPI_FILE" Name="cpu.rnpi"/>
-  <File Type="NPI_FILE" Name="cpu.npi"/>
-  <File Type="RBD_FILE" Name="cpu.rbd"/>
   <File Type="ROUTE-RQS" Name="cpu_routed.rqs"/>
   <File Type="POSTROUTE-PHYSOPT-RQS" Name="cpu_postroute_physopted.rqs"/>
   <File Type="ROUTE-RQS-RPT" Name="route_report_qor_suggestions_0.rpt"/>

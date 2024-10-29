@@ -19,8 +19,8 @@
 ----------------------------------------------------------------------------------
 
 library ieee;
-  use ieee.std_logic_1164.all;
-  use ieee.numeric_std.all;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,34 +32,64 @@ library ieee;
 -- use UNISIM.VComponents.all;
 
 entity alu is
-    port (
-        cpu_clk         : in    std_logic;
-        cpu_enable      : in    std_logic;
-        opcode          : in    std_logic_vector(3 downto 0);
-        operand1        : in    std_logic_vector(3 downto 0);
-        operand2        : in    std_logic_vector(3 downto 0);
-        result          : out   std_logic_vector(3 downto 0)
-    );
+  port (
+    cpu_clk    : in std_logic;
+    cpu_enable : in std_logic;
+    alu_enable : in std_logic;
+    opcode     : in std_logic_vector(3 downto 0);
+    input1     : in std_logic_vector(7 downto 0);
+    input2     : in std_logic_vector(7 downto 0);
+    result1    : out std_logic_vector(7 downto 0) := (others => '0');
+    result2    : out std_logic_vector(7 downto 0) := (others => '0')
+  );
 end entity alu;
 
 architecture behavioral of alu is
 
 begin
 
-    process (cpu_clk, cpu_enable, opcode, operand1, operand2) is
-    begin
-        if rising_edge(cpu_clk) then
-            if cpu_enable = '1' then
-                case opcode is
-                    when "0000" =>
-                        result <= std_logic_vector(unsigned(operand1) + unsigned(operand2));
-                    when "0001" =>
-                        result <= std_logic_vector(unsigned(operand1) - unsigned(operand2));
-                    when others =>
-                        result <= (others => '0');
-                end case;
-            end if;
-        end if;
-    end process;
+  process (cpu_clk, cpu_enable, alu_enable, opcode, input1, input2) is
+  begin
+    if rising_edge(cpu_clk) then
+      if cpu_enable = '1' and alu_enable = '1' then
+        case opcode is
+          when "0000" =>
+          -- Addition
+            result1 <= std_logic_vector(unsigned(input1) + unsigned(input2));
+            result2 <= input2;
+          when "0001" =>
+          -- Subtraction
+            result1 <=  std_logic_vector(unsigned(input1) - unsigned(input2));
+            result2 <= input2;
+          when "0010" =>
+          -- Multiplication
+            result1 <= std_logic_vector(resize(unsigned(input1) * unsigned(input2), 8));
+            result2 <= input2;
+          when "0011" =>
+          -- Division
+            result1 <= std_logic_vector(unsigned(input1) / unsigned(input2));
+            result2 <= input2;
+          when "0100" =>
+          -- AND
+            result1 <= std_logic_vector(unsigned(input1) and unsigned(input2));
+            result2 <= input2;
+          when "0101" =>
+          -- OR
+            result1 <= std_logic_vector(unsigned(input1) or unsigned(input2));
+            result2 <= input2;
+          when "0110" =>
+          -- XOR
+            result1 <= std_logic_vector(unsigned(input1) xor unsigned(input2));
+            result2 <= input2;
+          when "0111" =>
+          -- NOT
+            result1 <= std_logic_vector(not unsigned(input1));
+            result2 <= input2;
+          when others        =>
+            result1 <= (others => '0');
+        end case;
+      end if;
+    end if;
+  end process;
 
 end architecture behavioral;

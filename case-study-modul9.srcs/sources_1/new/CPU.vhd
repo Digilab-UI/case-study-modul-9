@@ -19,7 +19,7 @@
 ----------------------------------------------------------------------------------
 
 library ieee;
-  use ieee.std_logic_1164.all;
+use ieee.std_logic_1164.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,65 +32,83 @@ library ieee;
 
 entity cpu is
   port (
-    cpu_clk     : in    std_logic := '0';
-    cpu_enable  : in    std_logic := '1';
-    cpu_reset   : in    std_logic := '1';
-    instruction : in    std_logic_vector(15 downto 0) := (others => '0')
+    cpu_clk     : in std_logic                     := '0';
+    cpu_enable  : in std_logic                     := '1';
+    cpu_reset   : in std_logic                     := '1';
+    instruction : in std_logic_vector(15 downto 0) := (others => '0')
   );
 end entity cpu;
 
 architecture behavioral of cpu is
 
-  signal program_counter : integer   := 0;
+  -- Program Counter
+  signal program_counter : integer := 0;
   signal instruction_raw : std_logic_vector(15 downto 0) := (others => '0');
-  signal opcode          : std_logic_vector(3 downto 0) := (others => '0');
-  signal operand1        : std_logic_vector(3 downto 0) := (others => '0');
-  signal operand2        : std_logic_vector(3 downto 0) := (others => '0');
-  signal result          : std_logic_vector(3 downto 0) := (others => '0');
-  signal write_enable_in : std_logic := '0';
+  signal opcode          : std_logic_vector(3 downto 0)  := (others => '0');
+  signal operand1        : std_logic_vector(3 downto 0);
+  signal operand2        : std_logic_vector(3 downto 0);
+
+  -- Register File
+  signal write_enable_in : std_logic                    := '0'; -- '1' Write, '0' Read
+  signal rf_val_dest_in  : std_logic_vector(7 downto 0) := (others => '0');
+  signal rf_val_src_in   : std_logic_vector(7 downto 0) := (others => '0');
+  signal rf_val_dest_out : std_logic_vector(7 downto 0) := (others => '0');
+  signal rf_val_src_out  : std_logic_vector(7 downto 0) := (others => '0');
+
+  -- ALU
+  signal alu_enable   : std_logic                    := '0';
+  signal alu_operand1 : std_logic_vector(7 downto 0) := (others => '0');
+  signal alu_operand2 : std_logic_vector(7 downto 0) := (others => '0');
+  signal alu_result1  : std_logic_vector(7 downto 0) := (others => '0');
+  signal alu_result2  : std_logic_vector(7 downto 0) := (others => '0');
 
   type state_type is (idle, fetch, decode, read, execute, write, complete);
   signal state : state_type := idle;
 
   component decoder is
     port (
-      cpu_clk     : in    std_logic;
-      cpu_enable  : in    std_logic;
-      cpu_reset   : in    std_logic;
-      instruction : in    std_logic_vector(15 downto 0);
-      opcode      : out   std_logic_vector(3 downto 0);
-      operand1    : out   std_logic_vector(3 downto 0);
-      operand2    : out   std_logic_vector(3 downto 0)
+      cpu_clk     : in std_logic;
+      cpu_enable  : in std_logic;
+      cpu_reset   : in std_logic;
+      instruction : in std_logic_vector(15 downto 0);
+      opcode      : out std_logic_vector(3 downto 0);
+      operand1    : out std_logic_vector(3 downto 0);
+      operand2    : out std_logic_vector(3 downto 0)
     );
   end component decoder;
 
   component alu is
     port (
-      cpu_clk  : in    std_logic;
-      cpu_enable  : in    std_logic;
-      opcode   : in    std_logic_vector(3 downto 0);
-      operand1 : in    std_logic_vector(3 downto 0);
-      operand2 : in    std_logic_vector(3 downto 0);
-      result   : out   std_logic_vector(3 downto 0)
+      cpu_clk    : in std_logic;
+      cpu_enable : in std_logic;
+      alu_enable : in std_logic;
+      opcode     : in std_logic_vector(3 downto 0);
+      input1     : in std_logic_vector(7 downto 0);
+      input2     : in std_logic_vector(7 downto 0);
+      result1    : out std_logic_vector(7 downto 0);
+      result2    : out std_logic_vector(7 downto 0)
     );
   end component alu;
 
   component registerfile is
     port (
-      cpu_clk                : in    std_logic;
-      cpu_enable             : in    std_logic;
-      write_enable_in        : in    std_logic;
-      register_dest_data_out : out   std_logic_vector(3 downto 0);
-      register_src_data_out  : out   std_logic_vector(3 downto 0);
-      register_dest_data_in  : in    std_logic_vector(3 downto 0);
-      register_src_data_in   : in    std_logic_vector(3 downto 0)
+      cpu_clk                      : in std_logic;
+      cpu_enable                   : in std_logic;
+      write_enable_in              : in std_logic;
+      register_addr_dest_data_in   : in std_logic_vector(3 downto 0);
+      register_addr_src_data_in    : in std_logic_vector(3 downto 0);
+      register_value_dest_data_in  : in std_logic_vector(7 downto 0);
+      register_value_src_data_in   : in std_logic_vector(7 downto 0);
+      register_value_dest_data_out : out std_logic_vector(7 downto 0);
+      register_value_src_data_out  : out std_logic_vector(7 downto 0)
     );
   end component registerfile;
 
 begin
 
   decode_opcode : component decoder
-    port map (
+    port map
+    (
       cpu_clk     => cpu_clk,
       cpu_enable  => cpu_enable,
       cpu_reset   => cpu_reset,
@@ -100,25 +118,31 @@ begin
       operand2    => operand2
     );
 
-  -- register_file : component registerfile
-  --   port map (
-  --     cpu_clk                => cpu_clk,
-  --     cpu_enable             => cpu_enable,
-  --     write_enable_in        => write_enable_in,
-  --     register_dest_data_out => operand1,
-  --     register_src_data_out  => operand2,
-  --     register_dest_data_in  => result,
-  --     register_src_data_in   => result
-  --   );
+  register_file : component registerfile
+    port map
+    (
+      cpu_clk                      => cpu_clk,
+      cpu_enable                   => cpu_enable,
+      write_enable_in              => write_enable_in,
+      register_addr_dest_data_in   => operand1,
+      register_addr_src_data_in    => operand2,
+      register_value_dest_data_in  => rf_val_dest_in,
+      register_value_src_data_in   => rf_val_src_in,
+      register_value_dest_data_out => rf_val_dest_out,
+      register_value_src_data_out  => rf_val_src_out
+    );
 
   execute_opcode : component alu
-    port map (
-      cpu_clk   => cpu_clk,
-      cpu_enable  => cpu_enable,
-      opcode    => opcode,
-      operand1  => operand1,
-      operand2  => operand2,
-      result    => result
+    port map
+    (
+      cpu_clk    => cpu_clk,
+      cpu_enable => cpu_enable,
+      opcode     => opcode,
+      alu_enable => alu_enable,
+      input1     => rf_val_dest_out,
+      input2     => rf_val_src_out,
+      result1    => alu_result1,
+      result2    => alu_result2
     );
 
   process (cpu_clk) is
@@ -132,17 +156,29 @@ begin
           end if;
         when fetch =>
           instruction_raw <= instruction;
-          state <= decode;
+          state           <= decode;
         when decode =>
+          write_enable_in <= '0';
+          -- state           <= read_operand;
+        -- when read_operand =>
+          -- Harusnya disini write_enable_in <= '0';
+          alu_enable <= '1';
           state <= read;
         when read =>
-          state <= execute;
+          alu_operand1 <= rf_val_dest_out;
+          alu_operand2 <= rf_val_src_out;
+          alu_enable <= '0';
+          state        <= execute;
         when execute =>
           state <= write;
         when write =>
-          state <= complete;
+          write_enable_in <= '1';
+          rf_val_dest_in  <= alu_result1;
+          rf_val_src_in   <= alu_result2;
+          state           <= complete;
         when complete =>
-          state <= idle;
+          write_enable_in <= '0';
+          state           <= idle;
       end case;
 
       if (cpu_enable = '1') then
