@@ -35,6 +35,8 @@ entity registerfile is
     cpu_clk                      : in std_logic;
     cpu_enable                   : in std_logic;
     write_enable_in              : in std_logic;
+    address_flag                 : in std_logic;
+    negative_flag                : in std_logic;
     register_addr_dest_data_in   : in std_logic_vector(3 downto 0);
     register_addr_src_data_in    : in std_logic_vector(3 downto 0);
     register_value_dest_data_in  : in std_logic_vector(7 downto 0);
@@ -50,7 +52,7 @@ architecture behavioral of registerfile is
   signal registers : register_file := (
       0 => "00000011",  -- 3 in binary
       1 => "00000100",  -- 4 in binary
-      2 => "00001011",  -- 5 in binary
+      2 => "00000101",  -- 5 in binary
       others => (others => '0')
   );
 
@@ -60,21 +62,28 @@ begin
   begin
     if rising_edge(cpu_clk) then
       if (cpu_enable = '1') then
-        -- if read, which is indicated by write_enable_in = '0'
         case write_enable_in is
           when '0' =>
             register_value_dest_data_out <= registers(to_integer(unsigned(register_addr_dest_data_in)));
-            register_value_src_data_out  <= registers(to_integer(unsigned(register_addr_src_data_in)));
-            -- give alert
+            if(address_flag = '1') then
+              if(negative_flag = '1') then
+                register_value_src_data_out <= std_logic_vector(unsigned(registers(to_integer(unsigned(register_addr_src_data_in)))) + 1);
+              else
+                register_value_src_data_out <= registers(to_integer(unsigned(register_addr_src_data_in)));
+              end if;
+            else
+              register_value_src_data_out <= register_value_src_data_in;
+            end if;
             report "Read from register file" severity note;
           when '1' =>
-            -- registers(to_integer(unsigned(register_addr_dest_data_in))) <= register_value_dest_data_in;
-            registers(to_integer(unsigned(register_addr_dest_data_in))) <= register_value_dest_data_in;
-            registers(to_integer(unsigned(register_addr_src_data_in)))  <= register_value_src_data_in;
-            -- give alert
+            if(address_flag = '1') then
+              registers(to_integer(unsigned(register_addr_dest_data_in))) <= register_value_dest_data_in;
+              registers(to_integer(unsigned(register_addr_src_data_in)))  <= register_value_src_data_in;
+            else
+              registers(to_integer(unsigned(register_addr_dest_data_in))) <= register_value_dest_data_in;
+            end if;
             report "Write to register file" severity note;
           when others =>
-            -- handle unexpected values if necessary
             report "Unexpected value for write_enable_in" severity error;
         end case;
       end if;

@@ -54,37 +54,32 @@ begin
       if cpu_enable = '1' and alu_enable = '1' then
         case opcode is
           when "0000" =>
-          -- Addition
             result1 <= std_logic_vector(unsigned(input1) + unsigned(input2));
             result2 <= input2;
           when "0001" =>
-          -- Subtraction
             result1 <=  std_logic_vector(unsigned(input1) - unsigned(input2));
             result2 <= input2;
           when "0010" =>
-          -- Multiplication
             result1 <= std_logic_vector(resize(unsigned(input1) * unsigned(input2), 8));
             result2 <= input2;
           when "0011" =>
-          -- Division
             result1 <= std_logic_vector(unsigned(input1) / unsigned(input2));
             result2 <= input2;
           when "0100" =>
-          -- AND
             result1 <= std_logic_vector(unsigned(input1) and unsigned(input2));
             result2 <= input2;
           when "0101" =>
-          -- OR
             result1 <= std_logic_vector(unsigned(input1) or unsigned(input2));
             result2 <= input2;
           when "0110" =>
-          -- XOR
             result1 <= std_logic_vector(unsigned(input1) xor unsigned(input2));
             result2 <= input2;
           when "0111" =>
-          -- NOT
             result1 <= std_logic_vector(not unsigned(input1));
             result2 <= input2;
+          when "1000" => 
+            result1 <= std_logic_vector(unsigned(input1) + not unsigned(input2) + 1);
+            result2 <= std_logic_vector(unsigned(input2) - 1);
           when others        =>
             result1 <= (others => '0');
         end case;
