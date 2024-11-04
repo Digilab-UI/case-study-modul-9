@@ -1,2 +1,8 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/Programming/FPGA/case-study-modul9/case-study-modul9.srcs/sources_1/new/ALU.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'alu'
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/Programming/FPGA/case-study-modul9/case-study-modul9.srcs/sources_1/new/DECODER.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'decoder'
 INFO: [VRFC 10-163] Analyzing VHDL file "D:/Programming/FPGA/case-study-modul9/case-study-modul9.srcs/sources_1/new/REGISTERFILE.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'registerfile'
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/Programming/FPGA/case-study-modul9/case-study-modul9.srcs/sources_1/new/CPU.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'cpu'

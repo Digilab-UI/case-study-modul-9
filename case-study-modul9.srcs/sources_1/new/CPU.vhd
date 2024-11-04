@@ -35,8 +35,7 @@ entity cpu is
     cpu_clk     : in std_logic                     := '0';
     cpu_enable  : in std_logic                     := '1';
     cpu_reset   : in std_logic                     := '0';
-    -- instruction : in std_logic_vector(15 downto 0) := (others => '0')
-    instruction : in std_logic_vector(15 downto 0) := "0000000010001000" -- Delete this line
+    instruction : in std_logic_vector(15 downto 0) := (others => '0')
   );
 end entity cpu;
 
@@ -155,10 +154,13 @@ begin
       result2    => alu_result2
     );
 
-  process (cpu_clk) is
+  process (cpu_clk, cpu_reset) is
   begin
-
-    if rising_edge(cpu_clk) then
+    if cpu_reset = '1' then
+      state           <= idle;
+      program_counter <= 0;
+      instruction_raw <= (others => '0');
+    elsif rising_edge(cpu_clk) then
       case state is
         when idle =>
           if (cpu_enable = '1') then
