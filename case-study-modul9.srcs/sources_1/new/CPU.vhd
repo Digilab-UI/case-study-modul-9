@@ -154,7 +154,7 @@ begin
       result2    => alu_result2
     );
 
-  process (cpu_clk, cpu_reset) is
+  process (cpu_clk, cpu_reset, state) is
   begin
     if cpu_reset = '1' then
       state           <= idle;

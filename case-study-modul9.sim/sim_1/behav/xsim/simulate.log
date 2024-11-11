@@ -9,7 +9,7 @@ Note: Read from register file
 Time: 40 ns  Iteration: 0  Process: /cpu/register_file/line__61  File: D:/Programming/FPGA/case-study-modul9/case-study-modul9.srcs/sources_1/new/REGISTERFILE.vhd
 Note: Read from register file
 Time: 50 ns  Iteration: 0  Process: /cpu/register_file/line__61  File: D:/Programming/FPGA/case-study-modul9/case-study-modul9.srcs/sources_1/new/REGISTERFILE.vhd
-Note: Read from register file
+Note: Write to register file
 Time: 60 ns  Iteration: 0  Process: /cpu/register_file/line__61  File: D:/Programming/FPGA/case-study-modul9/case-study-modul9.srcs/sources_1/new/REGISTERFILE.vhd
 Note: Read from register file
 Time: 70 ns  Iteration: 0  Process: /cpu/register_file/line__61  File: D:/Programming/FPGA/case-study-modul9/case-study-modul9.srcs/sources_1/new/REGISTERFILE.vhd
@@ -19,5 +19,3 @@ Note: Read from register file
 Time: 90 ns  Iteration: 0  Process: /cpu/register_file/line__61  File: D:/Programming/FPGA/case-study-modul9/case-study-modul9.srcs/sources_1/new/REGISTERFILE.vhd
 Note: Read from register file
 Time: 100 ns  Iteration: 0  Process: /cpu/register_file/line__61  File: D:/Programming/FPGA/case-study-modul9/case-study-modul9.srcs/sources_1/new/REGISTERFILE.vhd
-Note: Read from register file
-Time: 110 ns  Iteration: 0  Process: /cpu/register_file/line__61  File: D:/Programming/FPGA/case-study-modul9/case-study-modul9.srcs/sources_1/new/REGISTERFILE.vhd
